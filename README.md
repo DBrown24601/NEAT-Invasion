@@ -7,7 +7,6 @@
 
 ###TODO
  * AI
- * Basic player/bullet collision
  * GUI 
 	 * Score
 	 * Level number
