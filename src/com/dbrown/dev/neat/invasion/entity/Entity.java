@@ -31,6 +31,7 @@ public abstract class Entity {
 	
 	public void outOfBounds() {
         if (y < 0) remove();
+        if (y > 419) remove();
     }
 	
 	public void render(Screen screen){

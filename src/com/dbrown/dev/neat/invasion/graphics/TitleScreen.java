@@ -1,6 +1,8 @@
 package com.dbrown.dev.neat.invasion.graphics;
 
-public class TitleScreen {
+import com.dbrown.dev.neat.invasion.level.Level;
+
+public class TitleScreen{
 	
 	public TitleScreen(){
 		

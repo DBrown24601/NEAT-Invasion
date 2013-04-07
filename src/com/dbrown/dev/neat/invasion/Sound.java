@@ -23,6 +23,7 @@ public class Sound {
         
         public void play() {
             if (clips==null) return;
+            
             clips[p].stop();
             clips[p].setFramePosition(0);
             clips[p].start();
@@ -34,6 +35,7 @@ public class Sound {
     public static Clips die = load("/sounds/die.wav", 1);
     public static Clips edie = load("/sounds/edie.wav", 4);
     public static Clips hit = load("/sounds/hit.wav", 4);
+    public static Clips select = load("/sounds/select.wav",4);
     
 
     private static Clips load(String name, int count) {

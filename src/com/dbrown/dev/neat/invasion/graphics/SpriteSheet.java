@@ -16,6 +16,7 @@ public class SpriteSheet {
 	public static SpriteSheet bullet = new SpriteSheet("/textures/laser2.png", 8);
 	public static SpriteSheet enemy = new SpriteSheet("/textures/enemy.png",32);
 	public static SpriteSheet gui = new SpriteSheet("/textures/gui.png/",128);
+	public static SpriteSheet title = new SpriteSheet("/textures/title.png/",256);
 	
 	public SpriteSheet(String path, int size){
 		this.path = path;

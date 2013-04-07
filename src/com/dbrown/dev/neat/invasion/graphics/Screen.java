@@ -9,7 +9,7 @@ import com.dbrown.dev.neat.invasion.level.tile.Tile;
 
 public class Screen {
 	
-	public int width, height;
+	public int width, height, scale;
 	public int[] pixels;
 	public final int MAP_SIZE = 8;
 	public final int MAP_SIZE_MASK = MAP_SIZE - 1;
@@ -21,14 +21,11 @@ public class Screen {
 	
 	private Random random = new Random();
 	
-	public Screen(int width, int height){
+	public Screen(int width, int height, int scale){
 		this.width = width;
 		this.height = height;
+		this.scale = scale;
 		pixels = new int[width * height];
-		
-		for (int i = 0; i < MAP_SIZE*MAP_SIZE; i++){
-			tiles[i] = random.nextInt(0xffffff);
-		}
 	}
 	
 	public void clear(){
@@ -88,13 +85,14 @@ public class Screen {
 	}
 	
 	public void renderCharacter(int xp, int yp, Sprite sprite){
-		for (int y = 0; y < 8; y++){
+		for (int y = 0; y < sprite.SIZE; y++){
 			int ya = y + yp;
-			for (int x = 0; x < 8; x++){
+			for (int x = 0; x < sprite.SIZE; x++){
 				int xa = x + xp;
-				if (xa < -8 || xa >= width || ya < 0 || ya >= height) break;
+				if (xa < -sprite.SIZE || xa >= width || ya < 0 || ya >= height) break;
 				if ( xa < 0 ) xa = 0;
-				pixels[xa + ya * width] = sprite.pixels[x + y * sprite.SIZE];
+				int col = sprite.pixels[x+y*sprite.SIZE];
+				if (col != 0xffff00ff) pixels[xa + ya * width] = col;
 			}
 		}
 	}
@@ -110,6 +108,7 @@ public class Screen {
 			}
 		}
 	}
+	
 	
 	
 	public void setOffset (int xOffset, int yOffset){

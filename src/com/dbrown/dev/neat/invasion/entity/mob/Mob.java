@@ -6,7 +6,7 @@ import com.dbrown.dev.neat.invasion.entity.Entity;
 
 public abstract class Mob extends Entity {
 	//protected Sprite sprite;
-	protected int health = 2;
+	public int health = 2;
 	protected int dir = 0;
 	protected boolean moving = false, up = false, left = false;
 	
@@ -50,13 +50,29 @@ public abstract class Mob extends Entity {
 	
 	public void shoot(int x, int y){
 		Sound.shoot.play();
-		//Perhaps make bullet allegance a factor? (Bullet(x,y,isPlayers))?
-		level.add(new Bullet(x,y));
+		if(this.isTypeOf("Player")){
+			level.add(new Bullet(x,y,true));
+		} else {
+			level.add(new Bullet(x,y,false));
+		}
+		
 		//Bullet bullet = new Bullet(x, y);
 	}
 	
 	public void update(){
 
+	}
+	
+	public int getX(){
+		int x = 0;
+		return x;
+	}
+	
+	public int getY(){
+		int y = 0;
+		
+		return y;
+		
 	}
 	
 	public boolean shot(Bullet bullet) {

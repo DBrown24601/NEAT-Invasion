@@ -53,6 +53,31 @@ public class Sprite {
 	
 	public static Sprite counter = new Sprite(8, 3, 3, SpriteSheet.gui);
 	
+	public static Sprite L1 = new Sprite(64,0,0, SpriteSheet.title);
+	public static Sprite L2 = new Sprite(64,1,0, SpriteSheet.title);
+	public static Sprite L3 = new Sprite(64,2,0, SpriteSheet.title);
+	public static Sprite L4 = new Sprite(64,3,0, SpriteSheet.title);
+	
+	public static Sprite cursor = new Sprite(8,0,8, SpriteSheet.title);
+	
+	public static Sprite start1 = new Sprite(16,0,5, SpriteSheet.title);
+	public static Sprite start2 = new Sprite(16,1,5, SpriteSheet.title);
+	public static Sprite start3 = new Sprite(16,2,5, SpriteSheet.title);
+	
+	public static Sprite op1 = new Sprite(16,0,6, SpriteSheet.title);
+	public static Sprite op2 = new Sprite(16,1,6, SpriteSheet.title);
+	public static Sprite op3 = new Sprite(16,2,6, SpriteSheet.title);
+	public static Sprite op4 = new Sprite(16,3,6, SpriteSheet.title);
+	
+	public static Sprite edit1 = new Sprite(16,0,7, SpriteSheet.title);
+	public static Sprite edit2 = new Sprite(16,1,7, SpriteSheet.title);
+	
+	public static Sprite exit1 = new Sprite(16,0,8, SpriteSheet.title);
+	public static Sprite exit2 = new Sprite(16,1,8, SpriteSheet.title);
+
+	
+
+	
 	public Sprite(int size, int color){
 		SIZE = size;
 		pixels = new int[SIZE * SIZE];

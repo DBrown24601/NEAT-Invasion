@@ -7,6 +7,7 @@ import com.dbrown.dev.neat.invasion.entity.Entity;
 import com.dbrown.dev.neat.invasion.entity.Life;
 import com.dbrown.dev.neat.invasion.entity.mob.Enemy;
 import com.dbrown.dev.neat.invasion.entity.mob.Player;
+import com.dbrown.dev.neat.invasion.Game;
 import com.dbrown.dev.neat.invasion.graphics.Screen;
 import com.dbrown.dev.neat.invasion.graphics.Sprite;
 import com.dbrown.dev.neat.invasion.level.tile.Tile;
@@ -17,46 +18,58 @@ public class Level {
 	protected int width, height;
 	
 	public List<Entity> entities = new ArrayList<Entity>();
+	public Player p;
 	public int enemies;
 	protected int[] tiles;
+	boolean title;
 	
 	
-	public Level(int width, int height)	{
+	public Level(int width, int height, Player p, boolean title)	{
 		this.width = width;
 		this.height = height;
+		this.p = p;
 		tiles = new int[width * height];
 		//System.out.println("WOO: " + width*height);
 		generateLevel();
 		Entity e;
 		//lives GUI until GUI pipeline is complete
-		
-		for(int j = 0; j < Player.lives; j++){
-			e = new Life(j*10 + 10, 15);
-			add(e);
+		if(!title){
+			Player.enable();
+			for(int j = 0; j < this.p.lives; j++){
+				//add to GUI arraylist first, then remove X for each life lost
+				e = new Life(j*10 + 10, 15);
+				add(e);
+			}
+			
+			for(int i = 0; i < 6; i++){
+				e = new Enemy(i*50+10,30);
+				add(e);
+				enemies++;
+				e = new Enemy(i*50+10,70);
+				add(e);
+				enemies++;
+			}
+		} else {
+			Player.disable();
+			
 		}
-		
-		for(int i = 0; i < 6; i++){
-			e = new Enemy(i*50+10,30);
-			add(e);
-			enemies++;
-			e = new Enemy(i*50+10,70);
-			add(e);
-			enemies++;
-		}
-		
-		
 	}
+	
 	
 	public Level(String path){
 		loadLevel(path);
 	}
 	
+	
+
+
 	public void init(){
 		
 	}
 	
 	private void time(){
 	}
+	
 	
 	protected void generateLevel(){
 		
@@ -109,6 +122,8 @@ public class Level {
 		
 		return hits;
 	}
+
+	
 	
 	public void renderEntities(Screen screen){
 		if(entities.size()>0){

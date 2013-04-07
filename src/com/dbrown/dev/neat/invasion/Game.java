@@ -17,6 +17,7 @@ import com.dbrown.dev.neat.invasion.graphics.Screen;
 import com.dbrown.dev.neat.invasion.input.Keyboard;
 import com.dbrown.dev.neat.invasion.level.Level;
 import com.dbrown.dev.neat.invasion.level.RandomLevel;
+import com.dbrown.dev.neat.invasion.level.TitleLevel;
 
 //WORK COMPUTER AVERAGE 60 UPS 965 FPS
 
@@ -47,10 +48,10 @@ public class Game extends Canvas implements Runnable{
 	private JFrame frame;
 	private Keyboard key;
 	private Level level;
-	private Player player;
+	public Player player;
 	private boolean running = false;
 	private String msg = "";
-	
+	public int updates;
 	private Screen screen;
 	
 	private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -64,11 +65,12 @@ public class Game extends Canvas implements Runnable{
 		Dimension size = new Dimension(width * scale, height * scale);
 		setPreferredSize(size);
 		score = 0;
-		screen = new Screen(width, height);
+		screen = new Screen(width, height, scale);
 		frame = new JFrame();
 		key = new Keyboard();
-		level = new RandomLevel(64,64);
+		level = new TitleLevel(64, 64, player);
 		player = new Player(width/2,height*7/8,key);
+		//level = new RandomLevel(64,64, player);
 		player.init(level);
 		addKeyListener(key);
 	}
@@ -89,7 +91,7 @@ public class Game extends Canvas implements Runnable{
 	}
 	
 	public void newLevel(){
-		level = new RandomLevel(64,64);
+		level = new RandomLevel(64,64,player);
 		player = new Player(width/2,height*7/8,key);
 		player.init(level);
 	}
@@ -100,7 +102,7 @@ public class Game extends Canvas implements Runnable{
 		final double ns = 1000000000.0 / 60.0;
 		double delta = 0;
 		int frames = 0;
-		int updates = 0;
+		updates = 0;
 		requestFocus();
 		while(running){
 			long now = System.nanoTime();
@@ -155,22 +157,27 @@ public class Game extends Canvas implements Runnable{
 		g.setFont(new Font("Verdana",0,12));
 		//DEBUG START
 		msg = "P1 = X: " + player.x + "  Y: " + player.y;
-		g.drawString(msg, 15, 15);
-		g.drawString("Num of enemies: " + level.enemies, 15, 27);
+		//g.drawString(msg, 15, 15);
+		g.drawString("Num of lives: " + Player.lives, 15, 27);
+		//g.drawString("Num of enemies: " + level.enemies, 15, 27);
 		
 		g.drawString("Score: " + score, (width * 2/3)*scale, 15);
-		
+		//sine wave code
+		//g.drawString(msg, 160 - msg.length() * 3, 140 - 3 - (int) (Math.abs(Math.sin(updates * 0.1) * 5)));
 
 		//DEBUG END
 		
 		
-		
-		if(level.enemies == 0){
-			win = true;
+		//if(input.enter) win = true;
+		if(level.enemies == 0||player.isRemoved()){
+			//win = true;
 		}
+		
+		
 		
 		if(win){
 			newLevel();
+			player.health = 2;
 			win = false;
 		}
 		g.dispose();
