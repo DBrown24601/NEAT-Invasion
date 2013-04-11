@@ -75,7 +75,11 @@ public class Sprite {
 	public static Sprite exit1 = new Sprite(16,0,8, SpriteSheet.title);
 	public static Sprite exit2 = new Sprite(16,1,8, SpriteSheet.title);
 
-	
+	public static Sprite game1 = new Sprite(16,0,9, SpriteSheet.title);
+	public static Sprite game2 = new Sprite(16,1,9, SpriteSheet.title);
+	public static Sprite game3 = new Sprite(16,2,9, SpriteSheet.title);
+	public static Sprite game4 = new Sprite(16,3,9, SpriteSheet.title);
+	public static Sprite game5 = new Sprite(16,4,9, SpriteSheet.title);
 
 	
 	public Sprite(int size, int color){

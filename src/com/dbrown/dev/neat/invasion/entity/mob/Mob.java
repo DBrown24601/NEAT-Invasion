@@ -10,6 +10,7 @@ public abstract class Mob extends Entity {
 	protected int dir = 0;
 	protected boolean moving = false, up = false, left = false;
 	
+	
 	public void move(int xa, int ya){
 		//-1, 0, 1
 
@@ -70,11 +71,10 @@ public abstract class Mob extends Entity {
 	
 	public int getY(){
 		int y = 0;
-		
 		return y;
-		
 	}
 	
+
 	public boolean shot(Bullet bullet) {
 		health--;
         if(health==0){

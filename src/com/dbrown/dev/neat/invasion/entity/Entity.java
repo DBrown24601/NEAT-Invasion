@@ -39,6 +39,8 @@ public abstract class Entity {
 		
 	}
 	
+
+	
 	public boolean isTypeOf(String s){
 		if(s.equals(type)){
 			return true;

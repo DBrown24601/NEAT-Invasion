@@ -3,11 +3,15 @@ package com.dbrown.dev.neat.invasion.level;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.neat4j.core.AIConfig;
+import org.neat4j.core.InitialisationFailedException;
+import org.neat4j.neat.core.NEATLoader;
+
+import com.dbrown.dev.neat.invasion.NEAT.GameEnemyManager;
 import com.dbrown.dev.neat.invasion.entity.Entity;
 import com.dbrown.dev.neat.invasion.entity.Life;
 import com.dbrown.dev.neat.invasion.entity.mob.Enemy;
 import com.dbrown.dev.neat.invasion.entity.mob.Player;
-import com.dbrown.dev.neat.invasion.Game;
 import com.dbrown.dev.neat.invasion.graphics.Screen;
 import com.dbrown.dev.neat.invasion.graphics.Sprite;
 import com.dbrown.dev.neat.invasion.level.tile.Tile;
@@ -33,9 +37,15 @@ public class Level {
 		generateLevel();
 		Entity e;
 		//lives GUI until GUI pipeline is complete
+		
+		
+		//gam.evolve();
+
 		if(!title){
 			Player.enable();
-			for(int j = 0; j < this.p.lives; j++){
+			
+			
+			for(int j = 0; j < Player.lives; j++){
 				//add to GUI arraylist first, then remove X for each life lost
 				e = new Life(j*10 + 10, 15);
 				add(e);
@@ -51,28 +61,50 @@ public class Level {
 			}
 		} else {
 			Player.disable();
-			
+			enemies++;
 		}
 	}
-	
-	
+
 	public Level(String path){
 		loadLevel(path);
 	}
 	
-	
-
-
 	public void init(){
 		
 	}
 	
-	private void time(){
-	}
-	
-	
 	protected void generateLevel(){
 		
+	}
+	
+	public int getClosestX(String type, int xe){
+		int xP = 1000;
+		for(int k = 0; k < entities.size(); k++){
+			if(entities.get(k).isTypeOf(type)){
+				if(xP>entities.get(k).x){
+					xP = entities.get(k).x;
+				}
+			}
+		}
+		if(xP==1000){
+			xP=0;
+		}
+		return xP;
+	}
+	
+	public int getClosestY(String type, int ye){
+		int yP = 1000;
+		for(int k = 0; k < entities.size(); k++){
+			if(entities.get(k).isTypeOf(type)){
+				if(yP>entities.get(k).x){
+					yP = entities.get(k).x;
+				}
+			}
+		}
+		if(yP==1000){
+			yP=0;
+		}
+		return yP;
 	}
 	
 	public void add(Entity e) {
@@ -101,6 +133,10 @@ public class Level {
 				}
 			}
 		}
+		
+		
+		
+		
 		//enemy AI etc
 	}
 	

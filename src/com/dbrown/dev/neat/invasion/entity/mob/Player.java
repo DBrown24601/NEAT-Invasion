@@ -11,11 +11,16 @@ public class Player extends Mob{
 	public static int lives = 3;
 	public static int menu = 0;
 	public static boolean enable = true;
+	public static int menuSelect = 0;
+	public static boolean pause = false;
+	public static boolean gameOver = false;
+	
 	private Keyboard input;
 	private Sprite sprite;
 	private int frame = 0;
 	private int iter = 7;
-	private int cdtimer = 0, testTimer = 0;
+	private int cdtimer = 10, testTimer = 0, pauseTimer = 0;
+	
 
 	
 	
@@ -42,6 +47,20 @@ public class Player extends Mob{
 		
 	}
 	
+
+	
+	public boolean isHit(double xc, double yc, double w, double h) {
+		//shrink hitbox to compensate for sprite size
+		double xx0 = x+15;
+		double yy0 = y+10;
+		double xx1 = x + 15 + w;
+		double yy1 = y + 10 + h;
+		if (xx0 > xc + w || yy0 > yc + h || xx1 < xc || yy1 < yc) return false;
+		
+		return true;
+		
+	}
+	
 	public void update(){
 		if(testTimer>0){
 			testTimer--;
@@ -50,7 +69,6 @@ public class Player extends Mob{
 		if(enable){
 			int xa = 0, ya = 0; 
 			boolean s = false, t = false;
-			
 			//VV handles animation VV
 			if(frame<10)frame++;
 			else frame = 0;
@@ -69,6 +87,7 @@ public class Player extends Mob{
 				cdtimer = 25;
 			}
 			
+			
 			if(xa != 0 || ya != 0){
 				//passes to move to determine direction
 				move(xa, ya);
@@ -76,13 +95,7 @@ public class Player extends Mob{
 				dir = 0;
 			}
 			
-			if(input.test) t = true;
 			
-			if(t&&testTimer==0){
-				Sound.die.play();
-				lives--;
-				testTimer = 10;
-			}
 		}else{
 			if(testTimer==0){
 				if (input.up) menuInc(true);
@@ -95,15 +108,25 @@ public class Player extends Mob{
 		
 	}
 	
+	public void pause(){
+		if(pause){
+			pause = false;
+			enable = true;
+		}else{
+			pause = true;
+			enable = false;
+		}
+	}
+	
 	public void menuSelect(){
 		if(menu==0){
-			
+			menuSelect = 1;
 		} else if(menu==1){
-			
+			menuSelect = 2;
 		} else if(menu==2){
-			
+			menuSelect = 3;
 		} else if(menu==3){
-			System.exit(0);
+			menuSelect = 4;
 		}
 		
 		
@@ -124,7 +147,7 @@ public class Player extends Mob{
 			if(menu==3){
 				menu=0;
 			} else {
-				menu++;
+				menu++; 
 			}
 			
 		}
@@ -133,8 +156,8 @@ public class Player extends Mob{
 
 	
 	public void remove(){
-		//remove from level code stuff
 		lives--;
+		Game.score-=100;
 		Sound.die.play();
 		removed = true;
 	}
@@ -153,6 +176,8 @@ public class Player extends Mob{
 	
 	
 	public void render(Screen screen){
+
+
 		if(enable){
 			if(dir==0){
 				sprite = Sprite.idle;
@@ -181,21 +206,12 @@ public class Player extends Mob{
 			if(!removed){
 				screen.renderPlayer(x, y, sprite);
 			}
+			
 		}
 		
 	}
 	
-	public boolean isHit(double xc, double yc, double w, double h) {
-		//shrink hitbox to compensate for sprite size
-		double xx0 = x+15;
-		double yy0 = y+10;
-		double xx1 = x + 15 + w;
-		double yy1 = y + 10 + h;
-		if (xx0 > xc + w || yy0 > yc + h || xx1 < xc || yy1 < yc) return false;
-		
-		return true;
-		
-	}
+	
 	
 	
 }

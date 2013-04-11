@@ -1,6 +1,6 @@
 package com.dbrown.dev.neat.invasion.entity;
 
-import com.dbrown.dev.neat.invasion.Game;
+import com.dbrown.dev.neat.invasion.entity.mob.Player;
 import com.dbrown.dev.neat.invasion.graphics.Screen;
 import com.dbrown.dev.neat.invasion.graphics.Sprite;
 
@@ -24,35 +24,30 @@ public class Bullet extends Entity{
 	}
 	
 	public void update(){
-		update++;
-		if(!playersBullet){
-			y+=8;
-			
-	            
-			if (level.p.isHit(x, y, 15, 5)) { 
-				if(level.p.shot(this)){
-	                remove();
-				}
-            }
-	        
-			
-			
-			
-		} else if (playersBullet){
-			y-=8;
-			
-			java.util.List<Entity> entities = level.getHits(x, y, 8, 8);
-			for (int i = 0; i < entities.size(); i++) {
-	            Entity e = entities.get(i);
+		if(Player.enable){
+			update++;
+			if(!playersBullet){
+				y+=8;
+				
+		            
+				if (level.p.isHit(x, y, 15, 5)) { 
+					if(level.p.shot(this)){
+		                remove();
+					}
+	            }	
+			} else if (playersBullet){
+				y-=8;
+				
+				java.util.List<Entity> entities = level.getHits(x, y, 8, 8);
+				for (int i = 0; i < entities.size(); i++) {
+		            Entity e = entities.get(i);
 
-	            if (e.shot(this)) { 	
-	                remove();
-	            }
-	        }
+		            if (e.shot(this)) { 	
+		                remove();
+		            }
+		        }
+			}
 		}
-		
-        
-        
 	}
 	
 	public void render(Screen screen) {

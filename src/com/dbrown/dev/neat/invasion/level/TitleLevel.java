@@ -2,6 +2,7 @@ package com.dbrown.dev.neat.invasion.level;
 
 import java.util.Random;
 
+import com.dbrown.dev.neat.invasion.Game;
 import com.dbrown.dev.neat.invasion.entity.Entity;
 import com.dbrown.dev.neat.invasion.entity.mob.Player;
 import com.dbrown.dev.neat.invasion.graphics.Screen;
@@ -65,7 +66,6 @@ public class TitleLevel extends Level{
 		//Exit
 		screen.renderCharacter(width/2*3, height*3+48, Sprite.exit1);
 		screen.renderCharacter(width/2*3+16, height*3+48, Sprite.exit2);
-		
 		
 		
 		//Cursor

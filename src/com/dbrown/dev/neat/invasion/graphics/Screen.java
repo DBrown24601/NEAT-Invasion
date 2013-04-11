@@ -1,7 +1,5 @@
 package com.dbrown.dev.neat.invasion.graphics;
 
-import java.awt.Graphics;
-import java.util.Random;
 
 import com.dbrown.dev.neat.invasion.entity.Entity;
 import com.dbrown.dev.neat.invasion.level.tile.Tile;
@@ -18,8 +16,6 @@ public class Screen {
 	public int xOffset, yOffset;
 	
 	public int tileSize = 5;
-	
-	private Random random = new Random();
 	
 	public Screen(int width, int height, int scale){
 		this.width = width;
@@ -54,20 +50,6 @@ public class Screen {
 	  }
 	}
 	}
-	
-	/*public void render(int xOffset, int yOffset){
-		
-		for(int y = 0; y < height; y++){
-			int yp = y + yOffset;
-			if(yp < 0 || yp >= height) continue;
-			for(int x = 0; x < width; x++){
-				int xp = x + xOffset;
-				if(xp < 0 || xp >= width) continue;
-				pixels[x + y * width] = Sprite.space.pixels[(xp & 31) + (yp & 31) * Sprite.space.SIZE];
-
-			}
-		}
-	}*/
 	
 	public void renderTile(int xp, int yp, Tile tile){
 		xp -= xOffset;
