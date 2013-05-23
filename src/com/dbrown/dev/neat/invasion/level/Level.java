@@ -3,11 +3,8 @@ package com.dbrown.dev.neat.invasion.level;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.neat4j.core.AIConfig;
-import org.neat4j.core.InitialisationFailedException;
-import org.neat4j.neat.core.NEATLoader;
-
-import com.dbrown.dev.neat.invasion.NEAT.GameEnemyManager;
+import com.anji.neat.Evolver;
+import com.dbrown.dev.neat.invasion.Game;
 import com.dbrown.dev.neat.invasion.entity.Entity;
 import com.dbrown.dev.neat.invasion.entity.Life;
 import com.dbrown.dev.neat.invasion.entity.mob.Enemy;
@@ -15,18 +12,24 @@ import com.dbrown.dev.neat.invasion.entity.mob.Player;
 import com.dbrown.dev.neat.invasion.graphics.Screen;
 import com.dbrown.dev.neat.invasion.graphics.Sprite;
 import com.dbrown.dev.neat.invasion.level.tile.Tile;
+//import org.neat4j.core.AIConfig;
+//import org.neat4j.core.InitialisationFailedException;
+//import org.neat4j.neat.core.NEATLoader;
+//import com.dbrown.dev.neat.invasion.NEAT.GameEnemyManager;
 
 
 public class Level {
 	
 	protected int width, height;
-	
+	public static int eNum = 0;
 	public List<Entity> entities = new ArrayList<Entity>();
 	public Player p;
 	public int enemies;
 	protected int[] tiles;
 	boolean title;
+	public Evolver evo;
 	
+	public boolean ready = false;
 	
 	public Level(int width, int height, Player p, boolean title)	{
 		this.width = width;
@@ -36,10 +39,10 @@ public class Level {
 		//System.out.println("WOO: " + width*height);
 		generateLevel();
 		Entity e;
+		
 		//lives GUI until GUI pipeline is complete
 		
 		
-		//gam.evolve();
 
 		if(!title){
 			Player.enable();
@@ -51,14 +54,19 @@ public class Level {
 				add(e);
 			}
 			
-			for(int i = 0; i < 6; i++){
-				e = new Enemy(i*50+10,30);
+			for(int i = 0; i < 7; i++){
+				e = new Enemy(i*42+8,30, i);
+				Game.enemyFitnessEval[i] = 0;
 				add(e);
 				enemies++;
-				e = new Enemy(i*50+10,70);
+				e = new Enemy(i*42+8,70, i + 7);
+				Game.enemyFitnessEval[i+7] = 0;
 				add(e);
 				enemies++;
+				
 			}
+			Game.levelStart = true;
+
 		} else {
 			Player.disable();
 			enemies++;
@@ -67,6 +75,12 @@ public class Level {
 
 	public Level(String path){
 		loadLevel(path);
+	}
+	
+	public void setEvolver(Evolver e){
+		evo = e;
+		
+		ready = true;
 	}
 	
 	public void init(){
@@ -112,11 +126,16 @@ public class Level {
         e.init(this);
     }
 	
+	public Entity getNum(){
+		Entity e = entities.get(eNum);
+		eNum++;
+		return e;
+	}
+	
 	protected void loadLevel(String path){
 	}
 	
 	public void update(){
-		
 		if(entities.size()>0){
 			for(int i = 0; i < entities.size(); i++){
 				Entity e = entities.get(i);
@@ -132,6 +151,8 @@ public class Level {
 					e.outOfBounds();
 				}
 			}
+			
+			
 		}
 		
 		

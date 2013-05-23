@@ -7,20 +7,21 @@ import com.dbrown.dev.neat.invasion.graphics.Sprite;
 import com.dbrown.dev.neat.invasion.input.Keyboard;
 
 public class Player extends Mob{
-	public static int totalLives = 3;
-	public static int lives = 3;
+	public static int totalLives = 5;
+	public static int lives = 5;
 	public static int menu = 0;
 	public static boolean enable = true;
 	public static int menuSelect = 0;
 	public static boolean pause = false;
 	public static boolean gameOver = false;
 	
+	private int delta = 60;
 	private Keyboard input;
 	private Sprite sprite;
 	private int frame = 0;
 	private int iter = 7;
 	private int cdtimer = 10, testTimer = 0, pauseTimer = 0;
-	
+	private int inv = 0;
 
 	
 	
@@ -28,6 +29,7 @@ public class Player extends Mob{
 		this.input = input;
 		sprite = Sprite.idle;
 		this.type = "Player";
+		this.health = 10;
 	}
 	
 	public Player(int x, int y, Keyboard input){
@@ -36,6 +38,7 @@ public class Player extends Mob{
 		this.input = input;
 		sprite = Sprite.idle;
 		this.type = "Player";
+		this.health = 10;
 	}
 	
 	public int getX(){
@@ -46,6 +49,15 @@ public class Player extends Mob{
 		return y;
 		
 	}
+	//potentially move these to mob or entity?
+	public void setX(int xT){
+		x = xT - sprite.idle.SIZE/2;
+	}
+	
+	public void setY(int yT){
+		y = yT;
+	}
+	
 	
 
 	
@@ -66,7 +78,17 @@ public class Player extends Mob{
 			testTimer--;
 		}
 		
-		if(enable){
+		delta--;
+		
+		if(delta==0) {
+			delta = 60;
+			if(inv > 0){
+				inv--;
+			}
+			
+		}
+		
+		if(enable&&!gameOver){
 			int xa = 0, ya = 0; 
 			boolean s = false, t = false;
 			//VV handles animation VV
@@ -96,7 +118,7 @@ public class Player extends Mob{
 			}
 			
 			
-		}else{
+		}else if (!enable&&!gameOver){
 			if(testTimer==0){
 				if (input.up) menuInc(true);
 				if (input.down) menuInc(false);
@@ -104,6 +126,8 @@ public class Player extends Mob{
 			}
 			
 			
+		} else if(!enable&&gameOver){
+			if (input.enter||input.fire) menuSelect();
 		}
 		
 	}
@@ -157,6 +181,7 @@ public class Player extends Mob{
 	
 	public void remove(){
 		lives--;
+		Game.deathPause = true;
 		Game.score-=100;
 		Sound.die.play();
 		removed = true;
@@ -164,6 +189,11 @@ public class Player extends Mob{
 	
 	public boolean isEnabled(){
 		return enable;
+	}
+	
+	public void respawn(){
+		removed = false;
+		health = 10;
 	}
 	
 	public static void enable(){

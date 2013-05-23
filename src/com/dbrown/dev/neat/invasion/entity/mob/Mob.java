@@ -1,15 +1,19 @@
 package com.dbrown.dev.neat.invasion.entity.mob;
 
+import com.anji.integration.Activator;
 import com.dbrown.dev.neat.invasion.Sound;
 import com.dbrown.dev.neat.invasion.entity.Bullet;
 import com.dbrown.dev.neat.invasion.entity.Entity;
+import com.dbrown.dev.neat.invasion.neat.EnemyFitnessFunction;
 
 public abstract class Mob extends Entity {
 	//protected Sprite sprite;
 	public int health = 2;
 	protected int dir = 0;
 	protected boolean moving = false, up = false, left = false;
-	
+	public Bullet b;
+	protected EnemyFitnessFunction ff;
+	protected Activator a;
 	
 	public void move(int xa, int ya){
 		//-1, 0, 1
@@ -32,14 +36,20 @@ public abstract class Mob extends Entity {
 		}
 		
 		if(!collisionX()){
-			
-			x += xa * 2;
+			if(this.isTypeOf("Enemy")){
+				x += xa;
+			} else {
+				x += xa * 2;
+			}
 		} else {
 			x += 0;
 		}
 		if(!collisionY()){
-			
-			y += ya * 2;
+			if(this.isTypeOf("Enemy")){
+				y += ya;
+			} else {
+				y += ya * 2;
+			}
 		} else {
 			y += 0;
 		}
@@ -54,7 +64,9 @@ public abstract class Mob extends Entity {
 		if(this.isTypeOf("Player")){
 			level.add(new Bullet(x,y,true));
 		} else {
-			level.add(new Bullet(x,y,false));
+			b = new Bullet(x,y,false);
+			b.setOwner(this);
+			level.add(b);
 		}
 		
 		//Bullet bullet = new Bullet(x, y);
@@ -64,6 +76,28 @@ public abstract class Mob extends Entity {
 
 	}
 	
+	public void setFF(){
+		
+	}
+	
+	public int xDistToPlayer(){
+		return 0;
+
+	}
+	
+	public int yDistToPlayer(){
+		return 0;
+	}
+	
+	public void learnPlayer(Player player){
+		
+	}
+	
+	public void setActivator(){
+		
+	}
+	
+	
 	public int getX(){
 		int x = 0;
 		return x;
@@ -72,6 +106,14 @@ public abstract class Mob extends Entity {
 	public int getY(){
 		int y = 0;
 		return y;
+	}
+	
+	public int getFitness(){
+		return finalFitness;
+	}
+	
+	public void addToFitness(int x){
+		fitnessScore += x;
 	}
 	
 
@@ -118,6 +160,15 @@ public abstract class Mob extends Entity {
 		}
 				
 		return false;
+	}
+	
+	public void setXNEAT(int x){
+	}
+	
+	public void setYNEAT(int y){
+	}
+	
+	public void fireNEAT(){
 	}
 	
 	

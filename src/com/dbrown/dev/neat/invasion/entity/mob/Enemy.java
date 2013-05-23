@@ -4,54 +4,136 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.neat4j.neat.ga.core.Chromosome;
-
+import com.anji.integration.Activator;
 import com.dbrown.dev.neat.invasion.Game;
 import com.dbrown.dev.neat.invasion.Sound;
 import com.dbrown.dev.neat.invasion.entity.Entity;
 import com.dbrown.dev.neat.invasion.graphics.Screen;
 import com.dbrown.dev.neat.invasion.graphics.Sprite;
+import com.dbrown.dev.neat.invasion.neat.EnemyFitnessFunction;
+//import org.neat4j.neat.ga.core.Chromosome;
 
 public class Enemy extends Mob{
 	
-	Chromosome chrom;
+	//Chromosome chrom;
 	public int points = 100;
 	Random rn = new Random();
-	private int r;
+	
 	private double[] output = {0.0,0.0,0.0};
 	private int cdtimer = 10;
+	private int delta;
 	boolean s = false;
+	private int xOrigin, yOrigin;
+	private boolean xResetLimit = false;
+	private boolean yResetLimit = false;
+	
 	//EnemyFitnessFunction eval = new EnemyFitnessFunction();
 	public List<Entity> input = new ArrayList<Entity>();
-	private int fitnessScore;
 	
-	public Enemy(int x, int y){
+	
+	//1 point per second alive
+	//5 points per shot
+	//200 per hit
+
+	
+	public Enemy(int x, int y, int id){
 		this.x = x;
 		this.y = y;
+		this.delta = 60;
 		this.type = "Enemy";
 		this.sprite = Sprite.enemy;
+		this.fitnessScore = 1;
+		this.id = id;
+		this.xOrigin = x;
+		this.yOrigin = y;
 	}
 	
 	
-	//To be used by the fitness function outputs-----------
-	public void setXNEAT(int x){
-		xa = x;
+	
+	
+	public Enemy() {
+		//empty intentionally
 	}
 	
-	public void setYNEAT(int y){
-		ya = y;
+	public void learnPlayer(Player player){
+		p = player;
+	}
+
+
+	//To be used by the fitness function ------------------
+	public void setFF(EnemyFitnessFunction ffT){
+		ff = ffT;
+	}
+	
+	public void setActivator(Activator activator){
+		a = activator;
+	}
+	
+	public void setXNEAT(int xd){
+		if(!Game.deathPause){
+			xa = xd;
+		} else {
+			if( xOrigin > x+1 ){
+				xa = 1;
+			} else if (xOrigin < x-1 ){
+				xa = -1;
+			} else {
+				xa = 0;
+				if(!xResetLimit){
+					Game.numReset++;
+					xResetLimit = true;
+				}
+			}
+			
+		}
+	}
+	
+	public void setYNEAT(int yd){
+		if(!Game.deathPause){
+			ya = yd;
+		} else {
+			if( yOrigin > y+1 ){
+				ya = 1;
+			} else if (yOrigin < y-1 ){
+				ya = -1;
+			} else {
+				ya = 0;
+				if(!yResetLimit){
+					Game.numReset++;
+					yResetLimit = true;
+				}
+			}
+		}
 	}
 	
 	public void fireNEAT(){
-		s = true;
+		if(!Game.deathPause){
+			s = true;
+		}
 	}
+	
+	public int getFitness(){
+		return finalFitness;
+	}
+	
 	//-----------------------------------------------------
 	
 	
+	
+	
 	public void update(){
-		int xa = 0, ya = 0; 
-		if(level.p.health>0){
+		//int xa = 0, ya = 0; 
+		if(Player.enable){
+			delta--;
+			if(delta == 0){
+				fitnessScore+=2;
+				delta = 60;
+			}
 			
+			if(!Game.deathPause){
+				xResetLimit = false;
+				yResetLimit = false;
+			}
 			
 			if(xa != 0 || ya != 0){
 				if(xa > 0&&x > 265){
@@ -62,15 +144,15 @@ public class Enemy extends Mob{
 				move(xa, ya);
 			}
 			
-			if(output[2]>0){
-				s=true;
-			}
 			
 			if(cdtimer > 0) cdtimer--;
 			
 			if (s&&cdtimer==0){
 				shoot(x, y);
 				cdtimer = 25;
+				fitnessScore+=2;
+				s = false;
+				//fitnessScore+=0;
 			}
 		}
 	}
@@ -110,6 +192,7 @@ public class Enemy extends Mob{
 		}
 	}
 	
+	
 	public int getClosestBulletX(){
 		return 0 - x;
 	}
@@ -134,13 +217,16 @@ public class Enemy extends Mob{
 	
 	public void remove(){
 		//remove from level code stuff
+		finalFitness = fitnessScore;
+		Game.enemyFitnessEval[id] = finalFitness;
+		System.out.println("ENEMY " + id + " FITNESS: " + finalFitness + "----------------------------------------------");
 		Game.score+=points;
 		Sound.edie.play();
 		removed = true;
 	}
 	
 	
-	/*
+	
 	public void move(int xa, int ya){
 		//-1, 0, 1
 
@@ -163,11 +249,11 @@ public class Enemy extends Mob{
 		
 		if(!collisionX()){
 			
-			x += xa * 2;
+			x += xa;
 		}
 		if(!collisionY()){
 			
-			y += ya * 2;
+			y += ya;
 		}		
 	}
 	
@@ -198,5 +284,5 @@ public class Enemy extends Mob{
 				
 		return false;
 	}
-*/
+
 }
